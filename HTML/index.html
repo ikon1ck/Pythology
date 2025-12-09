@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pythology</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://pyscript.net/releases/2025.11.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2025.11.1/core.js"></script>
+</head>
+<body>
+    <button py-click="open_modal" class="Btn">lvl</button>
+
+    <dialog id="lvl-Selector">
+        <div id="wrapper">
+            <h1 class="big-Text">level selector</h1>
+            <h2 class="smol-Text">First steps</h2>
+            <button py-click="start_lvl(num)" class="Btn-Lvl" id="1">1</button>
+        </div>
+    </dialog>
+
+    <div class="container movable-div">
+        <header class="top-bar"></header>
+        <div id="editor"></div>
+        <button py-click="run_code" class="editor_run">run</button>
+        <button py-click="clear_code" class="editor_clear">clear</button>
+    </div>
+
+    <div class="container movable-div">
+        <header class="top-bar"></header>
+        <div id="terminal"></div>
+    </div>
+
+    <!-- Ace Libraries -->
+    <script src="../App/aceEditorLib/ace.js"></script>
+    <script src="../App/aceEditorLib/mode-python.js"></script>
+    <script src="../App/aceEditorLib/ext-language_tools.js"></script>
+    <script src="../App/aceEditorLib/theme-terminal.js"></script>
+
+    <!-- Script -->
+    <!-- windowhandlers -->
+    <script type="py" src="../App/modalHandler.py"></script>
+    <script type="py" src="../App/WindowHandler/movableDiv.py"></script>
+
+    <!-- code Editing related -->
+    <script type="py" src="../App/CodingHandlerAndItsApp/editorComp.py"></script>
+    <script type="py" src="../App/CodingHandlerAndItsApp/terminalWorker.py"></script>
+    <script type="py" src="../App/CodingHandlerAndItsApp/matcher.py"></script>
+
+    <!-- level system -->
+    <script type="py" src="../App/lvlSystem.py"></script>
+</body>
+</html>
