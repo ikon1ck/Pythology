@@ -1,0 +1,34 @@
+        {
+    "tutorial": [
+        {
+            "text": "Hello. Welcome to 👋"
+        },
+        {
+            "text": "In this game, you'll learn programming by solving challenges."
+        },
+        {
+            "text": "Each level will teach you a new concept, from variables to functions."
+        },
+        {
+            "text": "Click anywhere on this box to progress through instructions."
+        },
+        {
+            "text": "Pay attention to the code examples - you'll need them!"
+        },
+        {
+            "text": "Ready to start your coding journey? Let's go! 🚀"
+        }
+    ],
+
+    "level1": [
+        {
+            "text": "Welcome to Level 1: Variables!"
+        },
+        {
+            "text": "A variable is like a box that holds a value."
+        },
+        {
+            "text": "Try creating your first variable: x = 10"
+        }
+    ]
+}
