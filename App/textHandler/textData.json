@@ -16,7 +16,7 @@
             "text": "Ssssstart by clicking on level button in the left corner and start 1st level!"
         },
         {
-            "text": "I will explain as you go along."
+            "text": "I will explain as you go along. There going be a lot of information to chew, so listen close."
         }
     ],
 
@@ -28,13 +28,46 @@
             "text": "I forgot to explain how the editor and terminal."
         },
         {
-            "text": "window on "
+            "text": "window on with editor name is editor. In the editor you can communicate with computer through commands for it to follow."
         },
         {
-            "text": "A variable is like a box that holds a value."
+            "text": "Terminal is output. What i mean, way computer can communicate with you."
         },
         {
-            "text": "Try creating your first variable: x = 10"
+            "text": "Quite simple, isn't it?"
+        },
+        {
+            "text": "Start by creating valuable."
+        },
+        {
+            "text": "Valuable is like box, where you can hold data like numbers, text or even part of the code (i will explain it later)."
+        },
+        {
+            "text": "Even though we have saved valuable. How do we display the valuable?"
+        },
+        {
+            "text": "Gladly, there is a way, and it's print()"
+        },
+        {
+            "text": "print() command that display everything inside () and it helps to check if even have saved valuable."
+        },
+        {
+            "text": "It better to show than how it works."
+        },
+        {
+            "text": "Type on the editor: x = 10"
+        },
+        {
+            "text": "and then on the next line: print(x)"
+        }
+    ],
+
+    "level1_complete": [
+        {
+            "text": "Congratulation!!!"
+        },
+        {
+            "text": "You have beaten all of the level."
         }
     ]
 }

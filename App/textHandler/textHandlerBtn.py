@@ -6,7 +6,7 @@ console.log("Python script loading...")
 
 # Track last click time
 last_click_time = 0
-click_delay = 300
+click_delay = 100
 
 async def show_tutorial(dialogue_key="tutorial"):
     """Show tutorial dialog with specific dialogue sequence"""

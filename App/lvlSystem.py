@@ -9,45 +9,17 @@ class LevelSetup:
         self.current_level = 0
         self.completed_levels = set()
         self.categories = {
-            "First Steps": [0, 1, 2, 3, 4, 5],
+            "First Steps": [0, 1,],
         }
         self.levels = [
             {
                 "name": "Level 1: Hello World",
                 "code": None,
-                "output": "Hello World",
-                "variables": None,
-                "must_have": ["print"],
-                "tutorial": "level1"
-            },
-            {
-                "name": "Level 2: Print Your Name",
-                "code": None,
-                "output": "Python",
-                "variables": None,
-                "must_have": ["print"],
-                "tutorial": "level1"
-            },
-            {
-                "name": "Level 3: Two Lines",
-                "code": None,
-                "output": "Line 1\nLine 2",
-                "variables": None,
-                "must_have": ["print"]
-            },
-            {
-                "name": "Level 4: Numbers",
-                "code": None,
-                "output": "42",
-                "variables": None,
-                "must_have": ["print"]
-            },
-            {
-                "name": "Level 5: Create Variable",
-                "code": None,
                 "output": "10",
-                "variables": {10: "a number"},
-                "must_have": ["print"]
+                "variables": None,
+                "must_have": ["print"],
+                "tutorial": "level1",
+                "completion": "level1_complete"
             },
         ]
         
@@ -90,6 +62,12 @@ class LevelSetup:
         self.completed_levels.add(self.current_level)
         self.render_levels()
         
+        # Show completion dialogue if it exists
+        level = self.levels[self.current_level]
+        if "completion" in level and level["completion"]:
+            import asyncio
+            asyncio.ensure_future(window.show_tutorial(level["completion"]))
+        
         # Write to terminal
         self.terminal_write("=" * 50)
         self.terminal_write(f"🎉 LEVEL {self.current_level + 1} COMPLETED!")
@@ -102,23 +80,23 @@ class LevelSetup:
         else:
             self.terminal_write("🏆 ALL LEVELS COMPLETED! Congratulations!")
     
-    def next_level(self):
+    async def next_level(self):
         """Go to next level"""
         next_lvl = self.current_level + 1
         if next_lvl < len(self.levels):
             if self.is_locked(next_lvl):
                 self.terminal_write("🔒 Complete current level first!")
             else:
-                self.start_lvl(next_lvl)
+                await self.start_lvl(next_lvl)  # Add await here
         else:
             self.terminal_write("No more levels available!")
     
-    def retry_level(self):
+    async def retry_level(self):
         """Retry current level"""
         self.terminal_write(f"🔄 Retrying Level {self.current_level + 1}")
         # Reset goal tracker so it can be completed again
         window.goal_tracker.goal_completed = False
-        self.start_lvl(self.current_level)
+        await self.start_lvl(self.current_level)  # Add await here
     
     async def start_lvl(self, lvl_num):
         if self.is_locked(lvl_num):
@@ -227,11 +205,11 @@ def start_lvl(num):
 
 def next_lvl(event=None):
     """Command to go to next level"""
-    level_Setup.next_level()
+    asyncio.ensure_future(level_Setup.next_level())  # Wrap in ensure_future
 
 def retry_lvl(event=None):
     """Command to retry current level"""
-    level_Setup.retry_level()
+    asyncio.ensure_future(level_Setup.retry_level())  # Wrap in ensure_future
 
 # Create proxies
 open_modal_proxy = create_proxy(open_modal)
