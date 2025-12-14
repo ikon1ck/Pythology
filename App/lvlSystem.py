@@ -1,5 +1,6 @@
 from pyscript import window, document
 from pyodide.ffi import create_proxy
+import asyncio
 
 set_goal = window.set_goal
 
@@ -8,9 +9,7 @@ class LevelSetup:
         self.current_level = 0
         self.completed_levels = set()
         self.categories = {
-            "First Steps": [0, 1, 2, 3],
-            "Variables & Data": [4, 5, 6, 7],
-            "Control Flow": [8, 9, 10, 11]
+            "First Steps": [0, 1, 2, 3, 4, 5],
         }
         self.levels = [
             {
@@ -18,14 +17,16 @@ class LevelSetup:
                 "code": None,
                 "output": "Hello World",
                 "variables": None,
-                "must_have": ["print"]
+                "must_have": ["print"],
+                "tutorial": "level1"
             },
             {
                 "name": "Level 2: Print Your Name",
                 "code": None,
                 "output": "Python",
                 "variables": None,
-                "must_have": ["print"]
+                "must_have": ["print"],
+                "tutorial": "level1"
             },
             {
                 "name": "Level 3: Two Lines",
@@ -47,13 +48,6 @@ class LevelSetup:
                 "output": "10",
                 "variables": {10: "a number"},
                 "must_have": ["print"]
-            },
-            {
-                "name": "Level 6: Add Numbers",
-                "code": None,
-                "output": "15",
-                "variables": {15: "sum"},
-                "must_have": ["+", "print"]
             },
         ]
         
@@ -126,7 +120,7 @@ class LevelSetup:
         window.goal_tracker.goal_completed = False
         self.start_lvl(self.current_level)
     
-    def start_lvl(self, lvl_num):
+    async def start_lvl(self, lvl_num):
         if self.is_locked(lvl_num):
             window.console.log(f"🔒 Level {lvl_num + 1} is locked!")
             self.terminal_write(f"🔒 Level {lvl_num + 1} is locked! Complete previous levels first.")
@@ -134,6 +128,10 @@ class LevelSetup:
         
         self.current_level = lvl_num
         level = self.levels[lvl_num]
+        
+        # Show tutorial if it exists
+        if "tutorial" in level and level["tutorial"]:
+            await window.show_tutorial(level["tutorial"])
         
         # Write to terminal
         self.terminal_write("=" * 50)
@@ -210,8 +208,9 @@ class LevelSetup:
                 btn.textContent = btn_text
                 
                 # Add click handler (only if not locked)
+                # In render_levels method, change this line:
                 if not self.is_locked(lvl_num):
-                    btn.onclick = create_proxy(lambda e, num=lvl_num: self.start_lvl(num))
+                    btn.onclick = create_proxy(lambda e, num=lvl_num: start_lvl(num))  # Uses the wrapper function
                 
                 wrapper.appendChild(btn)
 
@@ -224,7 +223,7 @@ def open_modal(event=None):
     level_Setup.open_modal()
 
 def start_lvl(num):
-    level_Setup.start_lvl(num)
+    asyncio.ensure_future(level_Setup.start_lvl(num))
 
 def next_lvl(event=None):
     """Command to go to next level"""

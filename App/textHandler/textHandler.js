@@ -1,48 +1,40 @@
 class TextHandler {
-    constructor(dialogueKey = "tutorial") {
+    constructor() {
         this.currentIndex = 0;
         this.isTyping = false;
         this.typewriterTimeout = null;
         this.currentText = "";
         this.textIndex = 0;
+        this.data = null;
+        this.texts = [];
         
-        // Typewriter settings
-        this.typingSpeed = 50; // milliseconds per character
-        this.punctuationPause = 300; // pause after punctuation
+        this.typingSpeed = 50;
+        this.punctuationPause = 300;
         
-        // Load JSON data
-        const jsonElement = document.getElementById("dialogueData");
-        this.data = JSON.parse(jsonElement.textContent);
-        
-        // Select dialogue sequence
-        this.texts = this.data[dialogueKey] || [];
-        
-        // Make this globally accessible for PyScript
         window.textHandler = this;
-        
-        this.updateDisplay();
     }
     
     updateDisplay() {
         const progressElem = document.getElementById("progress");
+        const indicatorElem = document.querySelector(".indicator");
+        
+        indicatorElem.classList.add("hidden");
         
         if (this.currentIndex < this.texts.length) {
             const current = this.texts[this.currentIndex];
             
-            // Start typewriter effect for text
             this.currentText = current.text || "";
             this.textIndex = 0;
             this.isTyping = true;
             this.typeWriter();
             
-            // Update progress
             progressElem.innerHTML = `Step ${this.currentIndex + 1} of ${this.texts.length}`;
         } else {
-            this.currentText = "🎉 Tutorial complete! You're ready to start coding!";
-            this.textIndex = 0;
-            this.isTyping = true;
-            this.typeWriter();
-            progressElem.innerHTML = "All done!";
+            // Reached the end - close dialog
+            const dialog = document.querySelector("#textDialog");
+            if (dialog) {
+                dialog.close();
+            }
         }
     }
     
@@ -50,10 +42,8 @@ class TextHandler {
         const textElem = document.getElementById("textContent");
         
         if (this.textIndex < this.currentText.length) {
-            // Get current character
             const char = this.currentText.charAt(this.textIndex);
             
-            // Handle HTML tags - add entire tag at once
             if (char === '<') {
                 const closingBracket = this.currentText.indexOf('>', this.textIndex);
                 if (closingBracket !== -1) {
@@ -64,11 +54,9 @@ class TextHandler {
                 }
             }
             
-            // Add character
             textElem.innerHTML = this.currentText.substring(0, this.textIndex + 1);
             this.textIndex++;
             
-            // Check for punctuation and add pause
             let delay = this.typingSpeed;
             if (char === '.' || char === '!' || char === '?') {
                 delay = this.punctuationPause;
@@ -78,37 +66,36 @@ class TextHandler {
             
             this.typewriterTimeout = setTimeout(() => this.typeWriter(), delay);
         } else {
-            // Typing complete
             this.isTyping = false;
+            const indicatorElem = document.querySelector(".indicator");
+            indicatorElem.classList.remove("hidden");
         }
     }
     
     completeTyping() {
-        // Stop current typing
         if (this.typewriterTimeout) {
             clearTimeout(this.typewriterTimeout);
             this.typewriterTimeout = null;
         }
         
-        // Show full text immediately
         const textElem = document.getElementById("textContent");
         textElem.innerHTML = this.currentText;
         this.isTyping = false;
+        
+        const indicatorElem = document.querySelector(".indicator");
+        indicatorElem.classList.remove("hidden");
     }
     
     nextText() {
-        // If currently typing, complete it first
         if (this.isTyping) {
             this.completeTyping();
         } else {
-            // Move to next text
             this.currentIndex++;
             this.updateDisplay();
         }
     }
     
     loadSequence(dialogueKey) {
-        // Stop any ongoing typing
         this.completeTyping();
         
         this.texts = this.data[dialogueKey] || [];
@@ -116,7 +103,6 @@ class TextHandler {
         this.updateDisplay();
     }
     
-    // Load from external JSON file
     async loadFromFile(filename) {
         try {
             const response = await fetch(filename);
@@ -128,7 +114,6 @@ class TextHandler {
         }
     }
     
-    // Control typewriter speed
     setTypingSpeed(speed) {
         this.typingSpeed = speed;
     }
@@ -138,10 +123,10 @@ class TextHandler {
     }
 }
 
-// Initialize
-const handler = new TextHandler("tutorial");
+window.TextHandler = TextHandler;
 
-// Click event
-document.getElementById("textBox").addEventListener("click", () => {
-    handler.nextText();
-});
+// REMOVE THESE LINES - they're outside the class and will run immediately
+// const handler = new TextHandler("tutorial");
+// document.getElementById("textBox").addEventListener("click", () => {
+//     handler.nextText();
+// });

@@ -9,18 +9,18 @@
     <script type="module" src="https://pyscript.net/releases/2025.11.1/core.js"></script>
 </head>
 <body>
-    <button>start</button>
+    <button id="startButton">start</button>
 
-    <div id="speaker">
-        <div class="text-box" id="textBox">
+    <dialog id="textDialog">
+        <div class="text-box" id="textBox" py-click="next_text">
             <div class="text-content" id="textContent">Click to start!</div>
             <div class="indicator">Click to continue ▶</div>
             <div class="progress" id="progress"></div>
         </div>
         <img src="https://nationalzoo.si.edu/sites/default/files/styles/wide/public/animals/20180228-9630jpj_0.jpg?h=8165685c&itok=35YE-D8f" alt="" id="character">
-    </div>
+    </dialog>
 
-    <!-- <button py-click="open_modal" class="Btn">lvl</button>
+    <button py-click="open_modal" class="Btn">lvl</button>
 
     <dialog id="lvl-Selector">
         <div id="wrapper">
@@ -28,40 +28,41 @@
             <h2 class="smol-Text">First steps</h2>
             <button py-click="start_lvl(num)" class="Btn-Lvl" id="1">1</button>
         </div>
-    </dialog> -->
+    </dialog>
 
-    <!-- <div class="container movable-div">
+    <div class="container movable-div">
         <header class="top-bar"></header>
         <div id="editor"></div>
         <button py-click="run_code" class="editor_run">run</button>
         <button py-click="clear_code" class="editor_clear">clear</button>
-    </div> -->
+    </div>
 
-    <!-- <div class="container movable-div">
+    <div class="container movable-div">
         <header class="top-bar"></header>
         <div id="terminal"></div>
-    </div> -->
+    </div>
 
-    <!-- Ace Libraries -->
-    <!-- <script src="../App/aceEditorLib/ace.js"></script>
+    <!--Ace Libraries -->
+    <script src="../App/aceEditorLib/ace.js"></script>
     <script src="../App/aceEditorLib/mode-python.js"></script>
     <script src="../App/aceEditorLib/ext-language_tools.js"></script>
-    <script src="../App/aceEditorLib/theme-terminal.js"></script> -->
+    <script src="../App/aceEditorLib/theme-terminal.js"></script>
 
     <!-- Script -->
-    <script id="dialogueData" type="application/json" src="../App/textHandler/textData.json"></script>
+    <script id="dialogueData" type="application/json"></script>
     <script src="../App/textHandler/textHandler.js"></script>
+    <script type="py" src="../App/textHandler/textHandlerBtn.py"></script>
 
     <!-- windowhandlers -->
-    <!-- <script type="py" src="../App/modalHandler.py"></script>
-    <script type="py" src="../App/WindowHandler/movableDiv.py"></script> -->
+    <script type="py" src="../App/modalHandler.py"></script>
+    <script type="py" src="../App/WindowHandler/movableDiv.py"></script>
 
     <!-- code Editing related -->
-    <!-- <script type="py" src="../App/CodingHandlerAndItsApp/editorComp.py"></script>
+    <script type="py" src="../App/CodingHandlerAndItsApp/editorComp.py"></script>
     <script type="py" src="../App/CodingHandlerAndItsApp/terminalWorker.py"></script>
-    <script type="py" src="../App/CodingHandlerAndItsApp/matcher.py"></script> -->
+    <script type="py" src="../App/CodingHandlerAndItsApp/matcher.py"></script>
 
     <!-- level system -->
-    <!-- <script type="py" src="../App/lvlSystem.py"></script> -->
+    <script type="py" src="../App/lvlSystem.py"></script>
 </body>
 </html>
