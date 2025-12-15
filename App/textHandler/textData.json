@@ -1,10 +1,10 @@
-        {
+{
     "tutorial": [
         {
-            "text": "Hello. Welcome to the pythology"
+            "text": "Hello. Welcome to the <span style='color: #31f1ff;'>Pythology</span>!"
         },
         {
-            "text": "My name is Py."
+            "text": "My name is <span style='color: green;'>py</span>."
         },
         {
             "text": "In this mini project, you will learn basic python."
@@ -25,31 +25,31 @@
             "text": "Here is 1st level."
         },
         {
-            "text": "I forgot to explain how the editor and terminal."
+            "text": "I forgot to explain how the <span style='color: #31f1ff;'>editor</span> and <span style='color: #31f1ff;'>terminal</span>."
         },
         {
-            "text": "window on with editor name is editor. In the editor you can communicate with computer through commands for it to follow."
+            "text": "window on with <span style='color: #31f1ff;'>editor</span> name is <span style='color: #31f1ff;'>editor</span>. In the <span style='color: #31f1ff;'>editor</span> you can communicate with computer through commands for it to follow."
         },
         {
-            "text": "Terminal is output. What i mean, way computer can communicate with you."
+            "text": "window with <span style='color: #31f1ff;'>terminal</span> name is <span style='color: #31f1ff;'>terminal</span> and it acts as for computer to communicate you back."
         },
         {
-            "text": "Quite simple, isn't it?"
+            "text": "Understood?"
         },
         {
-            "text": "Start by creating valuable."
+            "text": "Anyways start by creating <span style='color: #31f1ff;'>valuable</span>."
         },
         {
-            "text": "Valuable is like box, where you can hold data like numbers, text or even part of the code (i will explain it later)."
+            "text": "<span style='color: #31f1ff;'>valuable</span> is like box, where you can hold data like numbers, text or even part of the code (i will explain it later)."
         },
         {
-            "text": "Even though we have saved valuable. How do we display the valuable?"
+            "text": "Even though we have saved <span style='color: #31f1ff;'>valuable</span>. How do we display the valuable?"
         },
         {
-            "text": "Gladly, there is a way, and it's print()"
+            "text": "Gladly, there is a way, and it's <code>print<span style='color: black;'>()</span></code>"
         },
         {
-            "text": "print() command that display everything inside () and it helps to check if even have saved valuable."
+            "text": "<code>print<span style='color: black;'>()</span></code> command that display everything inside () and it helps to check if even have saved valuable."
         },
         {
             "text": "It better to show than how it works."

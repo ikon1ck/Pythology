@@ -1,9 +1,44 @@
+body {
+    margin: 0;
+    background-color: teal;
+}
+
+h1 {
+    padding: 0;
+    margin: 0;
+}
+
+code {
+    border-radius: 10%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #ffffff;
+    stroke: 1px solid #000000;
+    color: blue;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.flexy {
+    display: flex;
+}
+
+.top-bar-h1 {
+    color: white;
+    font-size: 24px;
+    padding: 4px;
+    font-weight: normal;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
 .container {
     user-select: none;
     position: relative;
     width: 500px;
     height: 500px;
-    background-color: white;
+    background-color: blue;
+    border: none;
+    margin: 0px;
+    padding: 0px;
 
     -webkit-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.06);
     -moz-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.06);
@@ -21,9 +56,25 @@
 }
 
 .top-bar {
-    height: 30px;
-    width: 100%;
-    background-color: blue;
+    background-color: #1e1e1e; /* Inactive state */
+    color: #cccccc;
+    padding: 10px 15px;
+    cursor: move;
+    user-select: none;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 1px solid #3e3e42;
+    transition: background-color 0.2s ease;
+}
+
+.top-bar[style*="background-color: rgb(0, 122, 204)"],
+.top-bar[style*="background-color: #007acc"] {
+    color: #ffffff;
+}
+
+.items {
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .movable-div {
@@ -34,23 +85,22 @@
     padding: 0px;
 }
 
-#wrapper {
-    user-select: none;
-    position: relative;
-    width: 500px;
-    height: 500px;
-    background-color: white;
-    padding: 16px;
-    pointer-events: fill;
-
-    -webkit-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.06);
-    -moz-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.06);
-    box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.06);
+#character {
+    justify-self: center;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #1e1e1e;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
-#character {
-    width: 300px;
-    height: 300px;
+.text-content {
+    font-size: 25px;
+    font-family: "Cause", cursive;
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 0 4px 20px rgba(0, 0, 0);
 }
 
 #textDialog {
@@ -59,9 +109,298 @@
 }
 
 #textBox {
-    width: 300px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 30px;
+    max-width: 400px;
     height: 200px;
-    border-radius: 10%;
-    background-color: white;
+    border-radius: 5%;
+    background-color: #1e1e1e;
     pointer-events: fill;
+    margin-bottom: 35px; /* Increased to account for arrow */
+    border: 2px solid #000000;
+
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+#textBox::after {
+    content: '';
+    position: absolute;
+    bottom: -15px; /* This makes it stick to the bottom edge */
+    left: 50%;
+    width: 0;
+    height: 0;
+    border: 15px solid transparent;
+    border-top-color: #1e1e1e;
+    border-bottom: 0;
+    margin-left: -15px;
+}
+
+.indicator, .progress {
+    font-size: 16px;
+    font-family: "Cause", cursive;
+    font-weight: 400;
+    color: #ffffff;
+    stroke: 2px solid #000000;
+
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.progress {
+    padding-top: 3px;
+    text-decoration: underline;
+}
+
+.movable-div {
+    position: absolute;
+    background-color: #000000; /* Inactive state */
+    border: 1px solid #3e3e42;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+}
+
+.movable-div[style*="background-color: rgb(26, 26, 26)"],
+.movable-div[style*="background-color: #1a1a1a"] {
+    box-shadow: 0 8px 30px rgba(0, 122, 204, 0.3);
+    border-color: #007acc;
+}
+
+.editor-modal::backdrop, .terminal-modal::backdrop {
+    background: transparent; /* Transparent backdrop so we can see desktop */
+}
+
+.editor-modal:not([open]), .terminal-modal:not([open]) {
+    display: none;
+}
+
+.editor-modal[open], .terminal-modal[open] {
+    display: flex
+}
+
+/* Modal content area */
+.modal-content {
+    flex: 1;
+    overflow: auto;
+    padding: 0;
+    background: #1e1e1e;
+}
+
+.editor_btn_section {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    justify-content: flex-end;
+    background-color: #3e3e42;
+    border: 1px solid #000000;
+    width: 100%;
+    flex-direction: row;
+}
+
+.editor_btn {
+    background-color: transparent;
+    border: none;
+    margin-right: 12px;
+    font-weight: bold;
+    scale: 1.3;
+    transition: 0.2s ease;
+}
+
+abbr {
+    text-decoration: none;
+}
+
+.editor_btn:hover {
+    background-color: #84848b;;
+    border: none;
+}
+
+#lvl-Selector {
+    scale: 1.3;
+    border: none;
+    border-radius: 5%;
+}
+
+#wrapper {
+    user-select: none;
+    position: relative;
+    background-color: white;
+    width: 400px;
+    padding: 50px;
+    pointer-events: fill;
+
+    -webkit-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.06);
+    -moz-box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.06);
+    box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.06);
+}
+
+.big-Text {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold;
+    font-size: 3em;
+}
+
+.smol-Text {
+    padding-left: 10px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.Btn-Lvl {
+    margin-left: 10px;
+    padding: 12px;
+    border: 2px solid #84848b;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+    border-radius: 25%;
+    transition: 0.2s ease;
+}
+
+.Btn-Lvl:hover {
+    scale: 1.1;
+}
+
+.modal_holder {
+    bottom: 0;
+    position: fixed;
+    width: 100%;
+    background-color: #1e1e1e;
+    border: 2px solid #3e3e42;
+}
+
+.Lvl-Btn {
+    margin: 4px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.window-controls {
+    align-content: center;
+}
+
+.window-btn {
+    padding: 10px;
+    background: transparent;
+    border: none;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold;
+    color: #ffffff;
+    transition: 0.2s ease;
+}
+
+.window-btn:hover {
+    background-color: rgb(255, 94, 88);
+}
+
+
+
+
+
+/* Resize Handles */
+.resize-handle {
+    position: absolute;
+    background: transparent;
+    z-index: 10;
+}
+
+/* Edge handles */
+.resize-n {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    cursor: ns-resize;
+}
+
+.resize-s {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    cursor: ns-resize;
+}
+
+.resize-e {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 5px;
+    cursor: ew-resize;
+}
+
+.resize-w {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 5px;
+    cursor: ew-resize;
+}
+
+/* Corner handles */
+.resize-nw {
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    cursor: nw-resize;
+    z-index: 11;
+}
+
+.resize-ne {
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    cursor: ne-resize;
+    z-index: 11;
+}
+
+.resize-sw {
+    bottom: 0;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    cursor: sw-resize;
+    z-index: 11;
+}
+
+.resize-se {
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    cursor: se-resize;
+    z-index: 11;
+}
+
+/* Prevent text selection while resizing */
+.no-select {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+/* Make sure your divs are positioned */
+.resizable-div {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+}
+
+.resizable-div .ace_editor {
+    width: 100%;
+    height: 100%;
+}
+
+#editor {
+    flex: 1;
+    position: relative;
 }

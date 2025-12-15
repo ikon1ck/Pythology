@@ -16,6 +16,7 @@ class AceEditorManager:
         self.editor.session.setMode("ace/mode/python")
         
         self.editor.setOptions({
+            "fontSize": "14px",
             'enableBasicAutocompletion': True,
             'enableLiveAutocompletion': True,
         })
@@ -37,6 +38,12 @@ editor_manager = AceEditorManager("editor")
 
 def run_code(event):
     code = editor_manager.get_code()
+    
+    # Check if code is empty or only whitespace
+    if not code.strip():
+        window.console.log("No code to execute")
+        return
+    
     window.console.log("Executing code in terminal:", code)
     
     # Send code to terminal for execution

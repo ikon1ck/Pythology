@@ -9,9 +9,19 @@ class LevelSetup:
         self.current_level = 0
         self.completed_levels = set()
         self.categories = {
-            "First Steps": [0, 1,],
+            "Chapter 1: First Steps": [0, 1, 2, 3],
         }
         self.levels = [
+            {
+                "name": "Level 1: Hello World",
+                "code": None,
+                "output": "10",
+                "variables": None,
+                "must_have": ["print"],
+                "tutorial": "level1",
+                "completion": "level1_complete"
+            },
+
             {
                 "name": "Level 1: Hello World",
                 "code": None,
@@ -179,14 +189,12 @@ class LevelSetup:
                 # Set button text with completion marker
                 btn_text = str(lvl_num + 1)
                 if lvl_num in self.completed_levels:
-                    btn_text += " ✓"
+                    btn_text = "✓"
                 elif self.is_locked(lvl_num):
-                    btn_text = "🔒 " + btn_text
+                    btn_text = btn_text
                 
                 btn.textContent = btn_text
                 
-                # Add click handler (only if not locked)
-                # In render_levels method, change this line:
                 if not self.is_locked(lvl_num):
                     btn.onclick = create_proxy(lambda e, num=lvl_num: start_lvl(num))  # Uses the wrapper function
                 

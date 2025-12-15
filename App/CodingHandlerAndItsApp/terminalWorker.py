@@ -311,6 +311,11 @@ class AceTerminal:
             
     def execute_code(self, code):
         """Execute Python code"""
+        # Check if code is empty or only whitespace
+        if not code.strip():
+            self.write("No code to execute")
+            return
+        
         # Clear previous execution output
         self.clear_execution_output()
         

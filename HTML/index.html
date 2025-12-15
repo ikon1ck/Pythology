@@ -7,40 +7,76 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://pyscript.net/releases/2025.11.1/core.css">
     <script type="module" src="https://pyscript.net/releases/2025.11.1/core.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cause:wght@100..900&display=swap" rel="stylesheet">
 </head>
 <body>
     <button id="startButton">start</button>
 
     <dialog id="textDialog">
-        <div class="text-box" id="textBox" py-click="next_text">
+        <div class="text-box flexy" id="textBox" py-click="next_text">
             <div class="text-content" id="textContent">Click to start!</div>
-            <div class="indicator">Click to continue ▶</div>
-            <div class="progress" id="progress"></div>
+            <div class="text-content-small">
+                <div class="indicator">Click to continue ▶</div>
+                <div class="progress" id="progress"></div>
+            </div>
         </div>
-        <img src="https://nationalzoo.si.edu/sites/default/files/styles/wide/public/animals/20180228-9630jpj_0.jpg?h=8165685c&itok=35YE-D8f" alt="" id="character">
+        <img src="https://nationalzoo.si.edu/sites/default/files/styles/wide/public/animals/20180228-9630jpj_0.jpg?h=8165685c&itok=35YE-D8f" alt="" id="character" class="flexy">
     </dialog>
-
-    <button py-click="open_modal" class="Btn">lvl</button>
 
     <dialog id="lvl-Selector">
         <div id="wrapper">
-            <h1 class="big-Text">level selector</h1>
+            <h1 class="big-Text">Level selector:</h1>
             <h2 class="smol-Text">First steps</h2>
             <button py-click="start_lvl(num)" class="Btn-Lvl" id="1">1</button>
         </div>
     </dialog>
 
-    <div class="container movable-div">
-        <header class="top-bar"></header>
+    <dialog id="editor-modal" class="container movable-div resizable-div" style="left: 100px; top: 100px; width: 500px; height: 400px;">
+        <header class="top-bar">
+            <div class="flexy items">
+                <h1 class="top-bar-h1">Editor</h1>
+                <div class="window-controls">
+                    <button class="window-btn minimize-modal-btn" title="Minimize">X</button>
+                </div>
+            </div>
+        </header>
+        <div class="flexy editor_btn_section">
+            <button py-click="run_code" class="editor_run editor_btn"><abbr title="Run">></abbr></button>
+            <button py-click="clear_code" class="editor_clear editor_btn"><abbr title="Clear"><</abbr></button>
+        </div>
         <div id="editor"></div>
-        <button py-click="run_code" class="editor_run">run</button>
-        <button py-click="clear_code" class="editor_clear">clear</button>
-    </div>
+    </dialog>
 
-    <div class="container movable-div">
-        <header class="top-bar"></header>
+    <dialog id="terminal-modal" class="container movable-div resizable-div" style="left: 100px; top: 100px; width: 500px; height: 400px;">
+        <header class="top-bar">
+            <div class="flexy items">
+                <h1 class="top-bar-h1">Terminal</h1>
+                <div class="window-controls">
+                    <button class="window-btn minimize-modal-btn" title="Minimize">X</button>
+                </div>
+            </div>
+        </header>
         <div id="terminal"></div>
+    </dialog>
+
+    <footer class="footer">
+    <div class="flexy modal_holder">
+        <!-- Original level selector button -->
+        <div class="items_Modal">
+            <button py-click="open_modal" class="Lvl-Btn">lvl</button>
+        </div>
+        
+        <!-- Modal window buttons -->
+        <div class="items_Modal">
+            <button data-modal-id="editor-modal" class="Lvl-Btn">Editor</button>
+        </div>
+        <div class="items_Modal">
+            <button data-modal-id="terminal-modal" class="Lvl-Btn">Terminal</button>
+        </div>
     </div>
+    </footer>
 
     <!--Ace Libraries -->
     <script src="../App/aceEditorLib/ace.js"></script>
@@ -56,6 +92,8 @@
     <!-- windowhandlers -->
     <script type="py" src="../App/modalHandler.py"></script>
     <script type="py" src="../App/WindowHandler/movableDiv.py"></script>
+    <script type="py" src="../App/WindowHandler/windowDiv.py"></script>
+    <script type="py" src="../App/WindowHandler/resizableDiv.py"></script>
 
     <!-- code Editing related -->
     <script type="py" src="../App/CodingHandlerAndItsApp/editorComp.py"></script>
