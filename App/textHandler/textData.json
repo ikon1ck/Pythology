@@ -1,7 +1,12 @@
 {
     "tutorial": [
         {
-            "text": "Hello. Welcome to the <span style='color: #31f1ff;'>Pythology</span>!"
+            "text": "Hello. Welcome to the <span style='color: #31f1ff;'>Pythology</span>!",
+            "action": {
+                "type": "highlight",
+                "selector": "#level-modal-btn",
+                "duration": 1000
+            }
         },
         {
             "text": "My name is <span style='color: green;'>py</span>."

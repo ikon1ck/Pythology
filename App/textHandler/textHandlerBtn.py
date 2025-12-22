@@ -1,5 +1,6 @@
 from pyscript import window, document
-from js import console, Date
+from pyodide.ffi import create_proxy
+from js import console, Date, setTimeout
 import asyncio
 
 console.log("Python script loading...")
@@ -65,10 +66,31 @@ async def show_tutorial(dialogue_key="tutorial"):
         import traceback
         console.error(traceback.format_exc())
 
+def hide_title_screen():
+    """Smoothly hide the title screen"""
+    menu = document.querySelector(".starting-Menu")
+    if menu:
+        # Add fade-out class to trigger transition
+        menu.classList.add("fade-out")
+        
+        # After transition completes, hide completely
+        def complete_hide():
+            menu.classList.add("hidden")
+        
+        # Create a proxy so the function persists for setTimeout
+        hide_proxy = create_proxy(complete_hide)
+        setTimeout(hide_proxy, 600)  # Match the CSS transition duration
+
 async def text_Start(event):
     console.log("Button clicked!")
     
     try:
+        # First, hide the title screen
+        hide_title_screen()
+        
+        # Wait a bit for the transition to look smoother
+        await asyncio.sleep(0.3)
+        
         if not hasattr(window, 'TextHandler'):
             console.error("TextHandler not found on window!")
             return
