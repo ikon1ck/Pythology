@@ -1,12 +1,7 @@
 {
     "tutorial": [
         {
-            "text": "Hello. Welcome to the <span style='color: #31f1ff;'>Pythology</span>!",
-            "action": {
-                "type": "highlight",
-                "selector": "#level-modal-btn",
-                "duration": 1000
-            }
+            "text": "Hello. Welcome to the <span style='color: #31f1ff;'>Pythology</span>!"
         },
         {
             "text": "My name is <span style='color: green;'>py</span>."
@@ -15,13 +10,40 @@
             "text": "In this mini project, you will learn basic python."
         },
         {
-            "text": "if pay attention to my text to not get confused."
+            "text": "But first lets open editor and terminal for you to start coding!"
         },
         {
-            "text": "Ssssstart by clicking on level button in the left corner and start 1st level!"
+            "text": "Click on the left corner for to open editor.",
+            "action": {
+                "type": "showAndWaitForButton",
+                "selector": "#editor-modal-btn"
+            }
         },
         {
-            "text": "I will explain as you go along. There going be a lot of information to chew, so listen close."
+            "text": "This is editor."
+        },
+        {
+            "text": "Editor will allow you type code for computer to follow to."
+        },
+        {
+            "text": "Now click on the button in the same corner to open terminal.",
+            "action": {
+                "type": "showAndWaitForButton",
+                "selector": "#terminal-modal-btn"
+            }
+        },
+        {
+            "text": "Terminal will act as an output for your code."
+        },
+        {
+            "text": "Specifically for this project you can drag editor or terminal by holding the top bar of the window."
+        },
+        {
+            "text": "Now start the first level by opening level selector through button and choose a first level.",
+            "action": {
+                "type": "showAndWaitForButton",
+                "selector": "#level-modal-btn"
+            }
         }
     ],
 
@@ -30,40 +52,46 @@
             "text": "Here is 1st level."
         },
         {
-            "text": "I forgot to explain how the <span style='color: #31f1ff;'>editor</span> and <span style='color: #31f1ff;'>terminal</span>."
+            "text": "In this level you will learn the most important part of programming."
         },
         {
-            "text": "window on with <span style='color: #31f1ff;'>editor</span> name is <span style='color: #31f1ff;'>editor</span>. In the <span style='color: #31f1ff;'>editor</span> you can communicate with computer through commands for it to follow."
+            "text": "A <span style='color: #31f1ff;'>variables</span>!"
         },
         {
-            "text": "window with <span style='color: #31f1ff;'>terminal</span> name is <span style='color: #31f1ff;'>terminal</span> and it acts as for computer to communicate you back."
+            "text": "<span style='color: #31f1ff;'>Variables</span> are containers for storing data values."
         },
         {
-            "text": "Understood?"
+            "text": "You can give them any names and they will be refered to their respective names."
         },
         {
-            "text": "Anyways start by creating <span style='color: #31f1ff;'>valuable</span>."
+            "text": "<span style='color: #31f1ff;'>Variables</span> are created after you give them data to save."
         },
         {
-            "text": "<span style='color: #31f1ff;'>valuable</span> is like box, where you can hold data like numbers, text or even part of the code (i will explain it later)."
+            "text": "For example, <code><span style='color: black;'>Box1 =</span><span style='color: maroon;'> 5</span></code>."
         },
         {
-            "text": "Even though we have saved <span style='color: #31f1ff;'>valuable</span>. How do we display the valuable?"
+            "text": "This is variable that named <span style='color: #31f1ff;'>Box1</span> and has <span style='color: #31f1ff;'>5</span> inside it."
         },
         {
-            "text": "Gladly, there is a way, and it's <code>print<span style='color: black;'>()</span></code>"
+            "text": "You may wonder why we use variables."
         },
         {
-            "text": "<code>print<span style='color: black;'>()</span></code> command that display everything inside () and it helps to check if even have saved valuable."
+            "text": "Variables allow to make code to be more readable and shorters amount of work to do, as variable can be recalled and they will keep their values inside."
         },
         {
-            "text": "It better to show than how it works."
+            "text": "Let's display our variable. But how do we do so, you may ask."
         },
         {
-            "text": "Type on the editor: x = 10"
+            "text": "Using <code>print<span style='color: black;'>()</span></code>."
         },
         {
-            "text": "and then on the next line: print(x)"
+            "text": "This command allows you to display anything inside of (). Can be text, numbers or data from variables"
+        },
+        {
+            "text": "This allows you to test, check if our code works."
+        },
+        {
+            "text": "For our first level, just create any variables and use print to display number <span style='color: #31f1ff;'>10</span>."
         }
     ],
 
@@ -72,7 +100,19 @@
             "text": "Congratulation!!!"
         },
         {
-            "text": "You have beaten all of the level."
+            "text": "You have finished the first level!"
+        },
+        {
+            "text": "This is just demo made for college project."
+        },
+        {
+            "text": "I hope you enjoyed it."
+        },
+        {
+            "text": "Thank you for trying out!!!"
+        },
+        {
+            "text": "You can use editor to do some niche coding."
         }
     ]
 }

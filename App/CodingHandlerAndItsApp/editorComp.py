@@ -37,30 +37,21 @@ editor_manager = AceEditorManager("editor")
 
 
 def run_code(event):
-    code = editor_manager.get_code()
+    code = editor_manager.get_code() # получаем код
     
-    # Check if code is empty or only whitespace
-    if not code.strip():
-        window.console.log("No code to execute")
+    if not code.strip(): # если в редакторе нет кода
         return
     
-    window.console.log("Executing code in terminal:", code)
-    
-    # Send code to terminal for execution
-    terminal.execute_code(code)
+    terminal.execute_code(code) # отправляем код
 
 
 def clear_code(event):
     editor_manager.clear()
-    window.console.log("Editor cleared")
 
 
 def clear_terminal(event):
     terminal.clear()
-    window.console.log("Terminal cleared")
 
-
-# Expose functions globally
 window.run_code = run_code
 window.clear_code = clear_code
 window.clear_terminal = clear_terminal

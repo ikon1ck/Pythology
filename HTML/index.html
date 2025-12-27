@@ -34,15 +34,12 @@
         <img src="https://nationalzoo.si.edu/sites/default/files/styles/wide/public/animals/20180228-9630jpj_0.jpg?h=8165685c&itok=35YE-D8f" alt="" id="character" class="flexy">
     </dialog>
 
-    <!-- <dialog id="lvl-Selector">
+    <dialog id="lvl-Selector">
         <div id="wrapper">
-            <h1 class="big-Text">Level selector:</h1>
-            <h2 class="smol-Text">First steps</h2>
-            <button py-click="start_lvl(num)" class="Btn-Lvl" id="1">1</button>
         </div>
-    </dialog> -->
+    </dialog>
 
-    <!-- <dialog id="editor-modal" class="container movable-div resizable-div" style="left: 100px; top: 100px; width: 500px; height: 400px;">
+    <dialog id="editor-modal" class="container movable-div resizable-div" style="left: 100px; top: 100px; width: 500px; height: 400px;">
         <header class="top-bar">
             <div class="flexy items">
                 <h1 class="top-bar-h1">Editor</h1>
@@ -68,22 +65,21 @@
             </div>
         </header>
         <div id="terminal"></div>
-    </dialog> -->
+    </dialog>
 
     <footer class="footer">
-    <div class="flexy modal_holder">
-        <div class="items_Modal">
-            <button py-click="open_modal" id="level-modal-btn" class="Lvl-Btn button-style">levels</button>
+        <div class="flexy modal_holder">
+            <div class="items_Modal">
+                <button id="level-modal-btn" class="Lvl-Btn button-style" style="display: none;">levels</button>
+            </div>
+            
+            <div class="items_Modal">
+                <button data-modal-id="editor-modal" id="editor-modal-btn" class="Lvl-Btn button-style" style="display: none;">Editor</button>
+            </div>
+            <div class="items_Modal">
+                <button data-modal-id="terminal-modal" id="terminal-modal-btn" class="Lvl-Btn button-style" style="display: none;">Terminal</button>
+            </div>
         </div>
-        
-        <!-- Modal window buttons -->
-        <div class="items_Modal">
-            <button data-modal-id="editor-modal" id="editor-modal-btn" class="Lvl-Btn button-style">Editor</button>
-        </div>
-        <div class="items_Modal">
-            <button data-modal-id="terminal-modal" id="terminal-modal-btn" class="Lvl-Btn button-style">Terminal</button>
-        </div>
-    </div>
     </footer>
 
     <!--Ace Libraries -->
@@ -98,17 +94,17 @@
     <script type="py" src="../App/textHandler/textHandlerBtn.py"></script>
 
     <!-- windowhandlers -->
-    <!-- <script type="py" src="../App/modalHandler.py"></script> -->
-    <!-- <script type="py" src="../App/WindowHandler/movableDiv.py"></script>
+    <script type="py" src="../App/modalHandler.py"></script>
+    <script type="py" src="../App/WindowHandler/movableDiv.py"></script>
     <script type="py" src="../App/WindowHandler/windowDiv.py"></script>
-    <script type="py" src="../App/WindowHandler/resizableDiv.py"></script> -->
+    <script type="py" src="../App/WindowHandler/resizableDiv.py"></script>
 
     <!-- code Editing related -->
-    <!-- <script type="py" src="../App/CodingHandlerAndItsApp/editorComp.py"></script>
+    <script type="py" src="../App/CodingHandlerAndItsApp/editorComp.py"></script>
     <script type="py" src="../App/CodingHandlerAndItsApp/terminalWorker.py"></script>
-    <script type="py" src="../App/CodingHandlerAndItsApp/matcher.py"></script> -->
+    <script type="py" src="../App/CodingHandlerAndItsApp/matcher.py"></script>
 
     <!-- level system -->
-    <!-- <script type="py" src="../App/lvlSystem.py"></script> -->
+    <script type="py" src="../App/lvlSystem.py"></script>
 </body>
 </html>

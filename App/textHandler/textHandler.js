@@ -22,7 +22,7 @@ class TextHandler {
         window.textHandler = this;
     }
     
-    updateDisplay() {
+    updateDisplay(skipDelay = false) {
         const progressElem = document.getElementById("progress");
         const indicatorElem = document.querySelector(".indicator");
         
@@ -36,11 +36,32 @@ class TextHandler {
             this.isTyping = true;
             
             const dialog = document.querySelector("#textDialog");
+            const textBox = document.getElementById("textBox");
+            
             if (!this.isInDelay) {
+                const wasOpen = dialog && dialog.open;
+                
                 if (dialog && !dialog.open) {
                     dialog.showModal();
                 }
-                this.typeWriter();
+                
+                // Only animate on first appearance (when dialog wasn't already open)
+                if (!wasOpen && textBox) {
+                    // Hide text box initially
+                    textBox.style.opacity = "0";
+                    textBox.style.transform = "translateY(-10px)";
+                    
+                    // Show text box with delay and animation
+                    setTimeout(() => {
+                        textBox.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+                        textBox.style.opacity = "1";
+                        textBox.style.transform = "translateY(0)";
+                        this.typeWriter();
+                    }, 500); // 500ms delay before text box appears
+                } else {
+                    // Dialog already open, just start typing immediately
+                    this.typeWriter();
+                }
             }
             
             progressElem.innerHTML = `Step ${this.currentIndex + 1} of ${this.texts.length}`;
@@ -105,6 +126,10 @@ class TextHandler {
                 this.waitForButton(action.selector, action.delayAfter || 0);
                 break;
                 
+            case 'showAndWaitForButton':
+                this.showAndWaitForButton(action.selector, action.delayAfter || 0);
+                break;
+                
             case 'waitForInput':
                 this.waitForInput(action.selector, action.expectedValue, action.delayAfter || 0);
                 break;
@@ -120,26 +145,10 @@ class TextHandler {
             case 'highlight':
                 this.justHighlight(action.selector, action.duration || 0);
                 break;
-        }
-    }
-    
-    createOverlay() {
-        if (this.overlayElement) {
-            return this.overlayElement;
-        }
-        
-        const overlay = document.createElement('div');
-        overlay.className = 'tutorial-overlay';
-        document.body.appendChild(overlay);
-        this.overlayElement = overlay;
-        
-        return overlay;
-    }
-    
-    removeOverlay() {
-        if (this.overlayElement) {
-            this.overlayElement.remove();
-            this.overlayElement = null;
+                
+            case 'showElement':
+                this.showElement(action.selector, action.duration || 0);
+                break;
         }
     }
     
@@ -152,14 +161,10 @@ class TextHandler {
             zIndex: element.style.zIndex
         });
         
-        // Create overlay
-        this.createOverlay();
-        
         // Add highlight class
         element.classList.add('tutorial-highlight');
         this.currentHighlight = element;
         
-        console.log(`Highlighted element: ${element.tagName}#${element.id || ''}.${element.className}`);
     }
     
     clearHighlight() {
@@ -178,9 +183,6 @@ class TextHandler {
             this.currentHighlight = null;
         }
         
-        // Remove overlay
-        this.removeOverlay();
-        
         // Remove event listeners
         if (this.actionCallback) {
             this.actionCallback.cleanup?.();
@@ -194,11 +196,9 @@ class TextHandler {
         const element = document.querySelector(selector);
         if (!element) {
             console.error(`Button not found: ${selector}`);
-            console.log('Available elements:', document.querySelectorAll('button, [id]'));
             return;
         }
         
-        console.log(`Waiting for button click: ${selector}`, element);
         
         // Highlight the element
         this.highlightElement(element);
@@ -214,35 +214,29 @@ class TextHandler {
         const originalOnClick = element.onclick;
         
         const clickHandler = (event) => {
-            console.log(`Tutorial: Button clicked: ${selector}, delay: ${delayAfter}ms`);
             
             event.stopImmediatePropagation();
             event.preventDefault();
             
             element.removeEventListener('click', clickHandler, true);
-            element.onclick = null;
             
             this.clearHighlight();
+            this.isWaitingForAction = false;
+            
+            // Trigger the button's actual action
+            if (originalOnClick) {
+                originalOnClick.call(element, event);
+            }
             
             if (delayAfter > 0) {
-                console.log(`Tutorial: Waiting ${delayAfter}ms before showing next text...`);
                 this.isInDelay = true;
-                this.isWaitingForAction = false;
-                
-                if (dialog && dialog.open) {
-                    dialog.close();
-                }
                 
                 setTimeout(() => {
-                    console.log('Tutorial: Delay finished, showing next text');
                     this.isInDelay = false;
-                    element.onclick = originalOnClick;
                     this.currentIndex++;
                     this.updateDisplay();
                 }, delayAfter);
             } else {
-                this.isWaitingForAction = false;
-                element.onclick = originalOnClick;
                 this.currentIndex++;
                 this.updateDisplay();
             }
@@ -253,7 +247,99 @@ class TextHandler {
         this.actionCallback = {
             cleanup: () => {
                 element.removeEventListener('click', clickHandler, true);
-                element.onclick = originalOnClick;
+                this.isInDelay = false;
+                if (dialog && wasOpen && !dialog.open) {
+                    this.isWaitingForAction = false;
+                    dialog.showModal();
+                }
+            }
+        };
+        
+        const indicatorElem = document.querySelector(".indicator");
+        indicatorElem.classList.add("hidden");
+    }
+    
+    showAndWaitForButton(selector, delayAfter = 0) {
+        this.isWaitingForAction = true;
+        
+        const element = document.querySelector(selector);
+        if (!element) {
+            console.error(`Button not found: ${selector}`);
+            return;
+        }
+        
+        
+        // Wait for typing to finish, then show and highlight the element
+        const showAndHighlight = () => {
+            // Show the element if it was hidden
+            if (element.style.display === 'none') {
+                element.style.display = '';
+            }
+            
+            // Highlight the element
+            this.highlightElement(element);
+            
+            // Close the dialog to allow interaction with the button
+            const dialog = document.querySelector("#textDialog");
+            if (dialog && dialog.open) {
+                dialog.close();
+            }
+        };
+        
+        // If still typing, wait for it to finish
+        if (this.isTyping) {
+            const checkTyping = setInterval(() => {
+                if (!this.isTyping) {
+                    clearInterval(checkTyping);
+                    showAndHighlight();
+                }
+            }, 100);
+        } else {
+            // Already done typing, show immediately
+            showAndHighlight();
+        }
+        
+        // Close the dialog to allow interaction with the button
+        const dialog = document.querySelector("#textDialog");
+        const wasOpen = dialog && dialog.open;
+        
+        // Store original onclick to restore later
+        const originalOnClick = element.onclick;
+        
+        const clickHandler = (event) => {
+            
+            event.stopImmediatePropagation();
+            event.preventDefault();
+            
+            element.removeEventListener('click', clickHandler, true);
+            
+            this.clearHighlight();
+            this.isWaitingForAction = false;
+            
+            // Trigger the button's actual action
+            if (originalOnClick) {
+                originalOnClick.call(element, event);
+            }
+            
+            if (delayAfter > 0) {
+                this.isInDelay = true;
+                
+                setTimeout(() => {
+                    this.isInDelay = false;
+                    this.currentIndex++;
+                    this.updateDisplay();
+                }, delayAfter);
+            } else {
+                this.currentIndex++;
+                this.updateDisplay();
+            }
+        };
+        
+        element.addEventListener('click', clickHandler, true);
+        
+        this.actionCallback = {
+            cleanup: () => {
+                element.removeEventListener('click', clickHandler, true);
                 this.isInDelay = false;
                 if (dialog && wasOpen && !dialog.open) {
                     this.isWaitingForAction = false;
@@ -346,7 +432,12 @@ class TextHandler {
             return;
         }
         
-        console.log(`Highlighting element: ${selector}`);
+        
+        // Close dialog to show highlighted element without backdrop blocking it
+        const dialog = document.querySelector("#textDialog");
+        if (dialog && dialog.open) {
+            dialog.close();
+        }
         
         // Highlight the element
         this.highlightElement(element);
@@ -362,6 +453,42 @@ class TextHandler {
             }, duration);
         }
         // If duration is 0, highlight stays until user clicks to next text
+    }
+    
+    showElement(selector, duration = 0) {
+        // Show an element that was hidden with display: none and wait for user to proceed
+        const element = document.querySelector(selector);
+        if (!element) {
+            console.error(`Element not found for showing: ${selector}`);
+            return;
+        }
+        
+        
+        // Make the element visible
+        if (element.style.display === 'none') {
+            element.style.display = '';
+        }
+        
+        // Wait for typing to finish before showing
+        if (this.isTyping) {
+            // Check periodically if typing is done
+            const checkTyping = setInterval(() => {
+                if (!this.isTyping) {
+                    clearInterval(checkTyping);
+                    
+                    // Show indicator so user can proceed
+                    const indicatorElem = document.querySelector(".indicator");
+                    indicatorElem.classList.remove("hidden");
+                }
+            }, 100);
+        } else {
+            // Typing already done, show indicator immediately
+            const indicatorElem = document.querySelector(".indicator");
+            indicatorElem.classList.remove("hidden");
+        }
+        
+        // Element stays visible, user clicks indicator to continue
+        // The nextText() function will handle advancing
     }
     
     completeTyping() {
@@ -389,7 +516,6 @@ class TextHandler {
     
     nextText() {
         if (this.isWaitingForAction) {
-            console.log("Waiting for required action...");
             return;
         }
         
@@ -421,10 +547,6 @@ class TextHandler {
         this.texts = this.data[dialogueKey] || [];
         this.currentIndex = 0;
         this.isWaitingForAction = false;
-        
-        console.log(`Loading sequence: ${dialogueKey}`);
-        console.log(`Found ${this.texts.length} text entries`);
-        console.log('First entry:', this.texts[0]);
         
         this.updateDisplay();
     }

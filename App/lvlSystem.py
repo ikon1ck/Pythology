@@ -8,9 +8,6 @@ class LevelSetup:
     def __init__(self):
         self.current_level = 0
         self.completed_levels = set()
-        self.categories = {
-            "Chapter 1: First Steps": [0, 1, 2, 3],
-        }
         self.levels = [
             {
                 "name": "Level 1: Hello World",
@@ -20,20 +17,11 @@ class LevelSetup:
                 "must_have": ["print"],
                 "tutorial": "level1",
                 "completion": "level1_complete"
-            },
-
-            {
-                "name": "Level 1: Hello World",
-                "code": None,
-                "output": "10",
-                "variables": None,
-                "must_have": ["print"],
-                "tutorial": "level1",
-                "completion": "level1_complete"
-            },
+            }
         ]
-        
-        # Hook into goal tracker to detect completion
+        self.categories = {
+            "Chapter 1: First Steps": [0, 1, 2, 3],
+        }
         self.setup_completion_detection()
     
     def get_terminal(self):
@@ -51,34 +39,31 @@ class LevelSetup:
         if terminal:
             terminal.write(text)
         else:
-            window.console.log(text)
+             window.console.log(text)
     
     def setup_completion_detection(self):
         """Monitor goal_tracker for completion"""
-        original_check = window.goal_tracker.check_match
-        
-        def wrapped_check(code, output):
-            result = original_check(code, output)
-            if result:
-                # Goal was completed!
-                self.on_level_complete()
-            return result
-        
-        window.goal_tracker.check_match = create_proxy(wrapped_check)
+        try:
+            original_check = window.goal_tracker.check_match
+            
+            def wrapped_check(code, output):
+                result = original_check(code, output)
+                if result:
+                    self.on_level_complete()
+                return result
+            
+            window.goal_tracker.check_match = create_proxy(wrapped_check)
+        except Exception as e:
+            window.console.error(f"Error setting up completion detection: {e}")
     
     def on_level_complete(self):
-        """Called when current level is completed"""
-        window.console.log(f"🎉 Level {self.current_level + 1} completed!")
         self.completed_levels.add(self.current_level)
         self.render_levels()
         
-        # Show completion dialogue if it exists
         level = self.levels[self.current_level]
         if "completion" in level and level["completion"]:
-            import asyncio
             asyncio.ensure_future(window.show_tutorial(level["completion"]))
         
-        # Write to terminal
         self.terminal_write("=" * 50)
         self.terminal_write(f"🎉 LEVEL {self.current_level + 1} COMPLETED!")
         self.terminal_write("=" * 50)
@@ -97,31 +82,30 @@ class LevelSetup:
             if self.is_locked(next_lvl):
                 self.terminal_write("🔒 Complete current level first!")
             else:
-                await self.start_lvl(next_lvl)  # Add await here
+                await self.start_lvl(next_lvl)
         else:
             self.terminal_write("No more levels available!")
     
     async def retry_level(self):
         """Retry current level"""
         self.terminal_write(f"🔄 Retrying Level {self.current_level + 1}")
-        # Reset goal tracker so it can be completed again
         window.goal_tracker.goal_completed = False
-        await self.start_lvl(self.current_level)  # Add await here
+        await self.start_lvl(self.current_level)
     
     async def start_lvl(self, lvl_num):
         if self.is_locked(lvl_num):
-            window.console.log(f"🔒 Level {lvl_num + 1} is locked!")
             self.terminal_write(f"🔒 Level {lvl_num + 1} is locked! Complete previous levels first.")
             return
         
         self.current_level = lvl_num
         level = self.levels[lvl_num]
         
-        # Show tutorial if it exists
         if "tutorial" in level and level["tutorial"]:
-            await window.show_tutorial(level["tutorial"])
+            try:
+                await window.show_tutorial(level["tutorial"])
+            except:
+                pass
         
-        # Write to terminal
         self.terminal_write("=" * 50)
         self.terminal_write(f"🎮 LEVEL {lvl_num + 1}: {level['name']}")
         self.terminal_write("=" * 50)
@@ -130,8 +114,6 @@ class LevelSetup:
             self.terminal_write(f"Must use: {', '.join(level['must_have'])}")
         self.terminal_write("Good luck!")
         self.terminal_write("")
-        
-        window.console.log(f"🎮 Starting {level['name']}")
 
         set_goal(
             level["code"],
@@ -144,92 +126,128 @@ class LevelSetup:
         self.render_levels()
     
     def is_locked(self, lvl_num):
-        # Level 0 is always unlocked
         if lvl_num == 0:
             return False
-        # Check if previous level is completed
         return (lvl_num - 1) not in self.completed_levels
     
     def open_modal(self):
+         
         modal = document.getElementById("lvl-Selector")
-        modal.showModal()
-        self.render_levels()
+         
+        if modal:
+            modal.showModal()
+             
+            self.render_levels()
+             
+        else:
+            window.console.error("Modal not found!")
     
     def close_modal(self):
         modal = document.getElementById("lvl-Selector")
-        modal.close()
+        if modal:
+            modal.close()
     
     def render_levels(self):
+         
         wrapper = document.getElementById("wrapper")
-        wrapper.innerHTML = ""
+         
         
-        # Title
-        title = document.createElement("h1")
-        title.className = "big-Text"
-        title.textContent = "level selector"
-        wrapper.appendChild(title)
+        if not wrapper:
+            window.console.error("Wrapper not found!")
+            return
         
-        # Render categories
+         
+         
+        
+        # Build HTML string
+        html = '<h1 class="big-Text">level selector</h1>'
+         
+        
         for category_name, level_nums in self.categories.items():
-            # Category header
-            category_header = document.createElement("h2")
-            category_header.className = "smol-Text"
-            category_header.textContent = category_name
-            wrapper.appendChild(category_header)
+             
+            html += f'<h2 class="smol-Text">{category_name}</h2>'
             
-            # Level buttons container
             for lvl_num in level_nums:
+                 
                 if lvl_num >= len(self.levels):
+                     
                     continue
-                    
-                btn = document.createElement("button")
-                btn.className = "Btn-Lvl"
-                btn.id = str(lvl_num)
                 
-                # Set button text with completion marker
                 btn_text = str(lvl_num + 1)
                 if lvl_num in self.completed_levels:
                     btn_text = "✓"
-                elif self.is_locked(lvl_num):
-                    btn_text = btn_text
                 
-                btn.textContent = btn_text
+                is_locked = self.is_locked(lvl_num)
+                 
                 
-                if not self.is_locked(lvl_num):
-                    btn.onclick = create_proxy(lambda e, num=lvl_num: start_lvl(num))  # Uses the wrapper function
+                disabled = "disabled" if is_locked else ""
+                onclick = f"window.level_Setup.start_level_sync({lvl_num})" if not is_locked else ""
                 
-                wrapper.appendChild(btn)
+                button_html = f'<button class="Btn-Lvl" id="level-btn-{lvl_num}" {disabled} onclick="{onclick}">{btn_text}</button>'
+                html += button_html
+                 
+        
+         
+        wrapper.innerHTML = html
+         
+         
+    
+    def start_level_sync(self, lvl_num):
+        """Synchronous wrapper for onclick"""
+        asyncio.ensure_future(self.start_lvl(lvl_num))
 
 
 # Initialize
 level_Setup = LevelSetup()
 
-# Expose functions to window for py-click
+# Expose to window for onclick handlers
+window.level_Setup = level_Setup
+
+# Expose functions to window - these are the main entry points
 def open_modal(event=None):
+     
     level_Setup.open_modal()
 
 def start_lvl(num):
+     
     asyncio.ensure_future(level_Setup.start_lvl(num))
 
 def next_lvl(event=None):
-    """Command to go to next level"""
-    asyncio.ensure_future(level_Setup.next_level())  # Wrap in ensure_future
+     
+    asyncio.ensure_future(level_Setup.next_level())
 
 def retry_lvl(event=None):
-    """Command to retry current level"""
-    asyncio.ensure_future(level_Setup.retry_level())  # Wrap in ensure_future
+     
+    asyncio.ensure_future(level_Setup.retry_level())
 
-# Create proxies
-open_modal_proxy = create_proxy(open_modal)
-start_lvl_proxy = create_proxy(start_lvl)
-next_lvl_proxy = create_proxy(next_lvl)
-retry_lvl_proxy = create_proxy(retry_lvl)
+# Create proxies and attach to window
+window.open_modal = create_proxy(open_modal)
+window.start_lvl = create_proxy(start_lvl)
+window.next_lvl = create_proxy(next_lvl)
+window.retry_lvl = create_proxy(retry_lvl)
 
-# Attach to window
-window.open_modal = open_modal_proxy
-window.start_lvl = start_lvl_proxy
-window.next_lvl = next_lvl_proxy
-window.retry_lvl = retry_lvl_proxy
+ 
+ 
 
-window.console.log("🎮 Level System Ready!")
-window.console.log("Commands: next_lvl, retry_lvl")
+# TEST: Try to write to wrapper immediately
+def test_wrapper():
+     
+    wrapper = document.getElementById("wrapper")
+     
+    if wrapper:
+         
+        wrapper.innerHTML = "<h1>TEST - CAN YOU SEE THIS?</h1><button>Test Button</button>"
+         
+    else:
+        window.console.error("❌ WRAPPER NOT FOUND!")
+
+# Run test after a short delay to ensure DOM is ready
+import js
+js.setTimeout(create_proxy(test_wrapper), 100)
+
+# Also try calling render_levels directly after a delay
+def test_render():
+     
+    level_Setup.render_levels()
+
+js.setTimeout(create_proxy(test_render), 500)

@@ -258,23 +258,11 @@ def set_goal(code, expected_output, variables=None, must_have=None):
     """
     goal_tracker.set_goal(code, expected_output, variables, must_have)
 
-
-def check_now():
-    """Manually trigger a goal check"""
-    code = editor_manager.get_code()
-    try:
-        output = window.terminal.get_execution_output()
-        goal_tracker.check_match(code, output)
-    except Exception as e:
-        window.console.error(f"Error checking now: {e}")
-
-
 # Expose functions globally
 window.run_code = run_code
 window.clear_code = clear_code
 window.clear_terminal = clear_terminal
 window.set_goal = set_goal
-window.check_now = check_now
 window.goal_tracker = goal_tracker
 window.editor_manager = editor_manager
 
@@ -287,9 +275,7 @@ async def wait_for_terminal():
             if hasattr(window, 'terminal') and window.terminal is not None:
                 terminal_obj = window.terminal
                 if hasattr(terminal_obj, 'execute_code'):
-                    window.console.log("✅ Goal Tracker System Ready!")
                     window.console.log("📝 Use: set_goal(code, output) to set a goal")
-                    window.console.log("🔍 Use: check_now() to manually check")
                     break
         except:
             pass

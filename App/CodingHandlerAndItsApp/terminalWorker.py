@@ -21,14 +21,11 @@ class AceTerminal:
     def setup_ace(self):
         """Initialize Ace Editor as terminal"""
         try:
-            console.log(f"Attempting to initialize terminal on element: {self.terminal_id}")
-            
             element = document.getElementById(self.terminal_id)
             if not element:
                 console.error(f"Element with id '{self.terminal_id}' not found!")
                 return False
                 
-            console.log("Element found, initializing Ace...")
             self.editor = ace.edit(self.terminal_id)
             
             self.editor.setTheme("ace/theme/terminal")
@@ -50,7 +47,6 @@ class AceTerminal:
             
             self.setup_event_listeners()
             
-            console.log("Terminal initialized successfully!")
             return True
             
         except Exception as e:
@@ -153,7 +149,6 @@ class AceTerminal:
                 self.handle_down()
 
     def handle_enter(self):
-        """Handle Enter key - execute command or provide input"""
         content = self.editor.getValue()
         lines = content.split('\n')
         last_line = lines[-1]
@@ -234,31 +229,24 @@ class AceTerminal:
         self.is_updating = False
         
     def write(self, text):
-        """Write output to terminal (without prompt)"""
         if not self.editor:
-            console.log(f"Terminal not ready, buffering: {text}")
             return
             
         if not text.strip():
             return
         
-        # Save as last output
         self.last_output = str(text)
-        # Add to execution output
+
         self.execution_output.append(str(text))
-        console.log(f"Last output: {self.last_output}")
         
         content = self.editor.getValue()
         lines = content.split('\n')
         
-        # Remove the current prompt line temporarily
         current_input = lines[-1]
         lines = lines[:-1]
         
-        # Add output
         lines.append(str(text))
         
-        # Add back the input line
         lines.append(current_input)
         
         self.is_updating = True
@@ -310,13 +298,10 @@ class AceTerminal:
         return result
             
     def execute_code(self, code):
-        """Execute Python code"""
-        # Check if code is empty or only whitespace
         if not code.strip():
             self.write("No code to execute")
             return
         
-        # Clear previous execution output
         self.clear_execution_output()
         
         async def run():
@@ -345,7 +330,6 @@ class AceTerminal:
 
 
 # Initialize terminal
-console.log("Creating terminal instance...")
 terminal = AceTerminal("terminal")
 
 async def init_terminal():
@@ -374,7 +358,6 @@ async def init_terminal():
         
         # Expose terminal to window after setup
         window.terminal = terminal
-        console.log("✅ Terminal exposed to window object")
     else:
         console.error("Failed to initialize terminal!")
 
